@@ -3,6 +3,7 @@ pipeline {
 
     stages {
         /*
+
         stage('Build') {
             agent {
                 docker {
@@ -20,7 +21,9 @@ pipeline {
                     ls -la
                 '''
             }
-        }*/
+        }
+        */
+
         stage('Test') {
             agent {
                 docker {
@@ -28,13 +31,15 @@ pipeline {
                     reuseNode true
                 }
             }
+
             steps {
                 sh '''
-                    # test -f build/index.html
+                    #test -f build/index.html
                     npm test
                 '''
             }
         }
+
         stage('E2E') {
             agent {
                 docker {
@@ -42,16 +47,18 @@ pipeline {
                     reuseNode true
                 }
             }
+
             steps {
                 sh '''
                     npm install serve
-                    node_modules\.bin\serve -s build &
+                    node_modules/.bin/serve -s build &
                     sleep 10
                     npx playwright test
                 '''
             }
         }
     }
+
     post {
         always {
             junit 'jest-results/junit.xml'
